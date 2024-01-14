@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.obsfreegdsc.obsfree"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.obsfreegdsc.obsfree"
