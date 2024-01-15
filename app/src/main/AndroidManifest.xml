@@ -22,6 +22,7 @@
         </activity>
 
         <activity android:name=".ConfirmReportActivity"/>
+        <activity android:name=".CaptureActivity"/>
 
     </application>
 
