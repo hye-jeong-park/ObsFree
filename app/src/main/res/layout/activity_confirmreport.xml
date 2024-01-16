@@ -58,6 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp">
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_comfirmreport_cancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/rectangle_left"
@@ -65,6 +66,7 @@
             android:text="취소하기"
             android:textColor="@color/black"/>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_confirmreport_report"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/rectangle_right"
