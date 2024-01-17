@@ -5,17 +5,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.rotationMatrix
 import com.obsfreegdsc.obsfree.databinding.ActivityCaptureBinding
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -82,27 +86,39 @@ class CaptureActivity : AppCompatActivity() {
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault())
             .format(System.currentTimeMillis())
 
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(File(applicationContext.cacheDir, name))
-            .build()
-
         // Set up image capture listener, which is triggered after photo has
         // been taken
         imageCapture.takePicture(
-            outputOptions,
             ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
+            object : ImageCapture.OnImageCapturedCallback() {
                 override fun onError(exception: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
                 }
 
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                override fun onCaptureSuccess(image: ImageProxy) {
+                    val bitmap = Bitmap.createBitmap(image.toBitmap(), 0, 0,
+                        image.width, image.height, rotationMatrix(image.imageInfo.rotationDegrees.toFloat()), true)
 
-                    intentConfirmReport(name)
+                    val file = File(applicationContext.cacheDir, name)
+
+                    try {
+                        val fileOutputStream = FileOutputStream(file)
+
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+
+                        fileOutputStream.flush()
+                        fileOutputStream.close()
+
+                        val msg = "Photo capture succeeded: ${file.absolutePath}"
+                        Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                        Log.d(TAG, msg)
+
+                        intentConfirmReport(name)
+                    } catch (exception: Exception) {
+                        val msg = "Photo save failed: ${exception.message}"
+                        Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, msg, exception)
+                    }
                 }
             }
         )
