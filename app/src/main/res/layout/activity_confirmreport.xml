@@ -29,7 +29,7 @@
         android:id="@+id/img_confirmreport_photo"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:background="@drawable/map4"
+        android:src="@drawable/map4"
         android:layout_gravity="center"/>
     <Space
         android:layout_width="wrap_content"
