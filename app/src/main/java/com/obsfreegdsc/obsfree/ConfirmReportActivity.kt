@@ -26,11 +26,15 @@ class ConfirmReportActivity : AppCompatActivity() {
     }
 
     private fun cancel() {
-        cacheFile!!.delete()
         finish()
     }
 
     private fun report() {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         cacheFile!!.delete()
     }
 }
