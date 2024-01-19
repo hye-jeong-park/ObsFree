@@ -22,11 +22,15 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class CaptureActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCaptureBinding
 
     private var imageCapture: ImageCapture? = null
+
+    private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,8 @@ class CaptureActivity : AppCompatActivity() {
         }
 
         viewBinding.btnCaptureCapture.setOnClickListener{ takePhoto() }
+
+        cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
     private fun startCamera() {
@@ -149,6 +155,11 @@ class CaptureActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraExecutor.shutdown()
     }
 
     companion object {
