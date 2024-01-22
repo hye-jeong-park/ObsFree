@@ -106,7 +106,7 @@
         android:background="@drawable/rectangle_edge" />
 
     <ImageButton
-        android:id="@+id/cam_button"
+        android:id="@+id/btn_main_intentcapture"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_centerInParent="true"
