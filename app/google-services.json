@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "116713014832",
+    "project_id": "obsfree-f05e4",
+    "storage_bucket": "obsfree-f05e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116713014832:android:4f1916c69f5f361a650ff5",
+        "android_client_info": {
+          "package_name": "com.obsfreegdsc.obsfree"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrWqdgXUBG-P31gRk_8NG4mZGq1kmiS2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
