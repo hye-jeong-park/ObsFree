@@ -4,8 +4,11 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -14,12 +17,14 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.obsfreegdsc.obsfree.databinding.ActivityConfirmreportBinding
 import java.io.File
+import java.util.Locale
 
 class ConfirmReportActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityConfirmreportBinding
 
     private var cacheFile: File? = null
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityConfirmreportBinding.inflate(layoutInflater)
@@ -49,6 +54,7 @@ class ConfirmReportActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("MissingPermission")
     private fun getCurrentLocation() {
         val locationClient = LocationServices.getFusedLocationProviderClient(baseContext)
@@ -65,11 +71,12 @@ class ConfirmReportActivity : AppCompatActivity() {
                 val latitude = location.latitude
                 val longitude = location.longitude
 
-                Toast.makeText(
-                    baseContext,
-                    "latitude: $latitude, longitude: $longitude",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Geocoder(this, Locale.getDefault())
+                    .getFromLocation(latitude, longitude, 1) {
+                        runOnUiThread {
+                            viewBinding.tvConfirmreportAddress.text = it.first().getAddressLine(0)
+                        }
+                }
             } else {
                 Toast.makeText(
                     baseContext,
@@ -85,6 +92,7 @@ class ConfirmReportActivity : AppCompatActivity() {
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
