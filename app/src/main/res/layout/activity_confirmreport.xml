@@ -45,6 +45,7 @@
             android:layout_height="50dp"
             android:background="@drawable/spot"/>
         <TextView
+            android:id="@+id/tv_confirmreport_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="위치정보"
