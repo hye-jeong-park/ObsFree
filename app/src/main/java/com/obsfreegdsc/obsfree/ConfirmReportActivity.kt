@@ -2,6 +2,7 @@ package com.obsfreegdsc.obsfree
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Geocoder
@@ -76,6 +77,10 @@ class ConfirmReportActivity : AppCompatActivity() {
         )
 
         db.collection("broken_blocks").add(brokenBlock)
+
+        intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
