@@ -2,9 +2,12 @@ package com.obsfreegdsc.obsfree
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Geocoder
+import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -15,14 +18,19 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.obsfreegdsc.obsfree.databinding.ActivityConfirmreportBinding
 import java.io.File
 import java.util.Locale
+import java.util.UUID
 
 class ConfirmReportActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityConfirmreportBinding
 
     private var cacheFile: File? = null
+    private var location: Location? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +59,42 @@ class ConfirmReportActivity : AppCompatActivity() {
     }
 
     private fun report() {
+        if (location == null) {
+            Toast.makeText(
+                this,
+                "Cannot find current location.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
 
+        if (cacheFile == null) {
+            Toast.makeText(
+                this,
+                "Cannot find image file.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val uuid = UUID.randomUUID().toString()
+
+        val db = Firebase.firestore
+        val brokenBlock = BrokenBlock(
+            location!!.latitude,
+            location!!.longitude,
+            "$uuid.jpg"
+        )
+
+        db.collection("broken_blocks").add(brokenBlock)
+
+        val storage = Firebase.storage
+        val imgRef = storage.reference.child("images/$uuid.jpg")
+        imgRef.putFile(Uri.fromFile(cacheFile))
+
+        intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -67,9 +110,9 @@ class ConfirmReportActivity : AppCompatActivity() {
             this
         ) { task ->
             if (task.isSuccessful && task.result != null) {
-                val location = task.result
-                val latitude = location.latitude
-                val longitude = location.longitude
+                location = task.result
+                val latitude = location!!.latitude
+                val longitude = location!!.longitude
 
                 Geocoder(this, Locale.getDefault())
                     .getFromLocation(latitude, longitude, 1) {
