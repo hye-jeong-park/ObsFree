@@ -14,6 +14,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(viewBinding.root)
 
         viewBinding.btnMainIntentcapture.setOnClickListener{ intentCapture() }
+        viewBinding.btnMainIntentmap.setOnClickListener{ intentMaps() }
+
+    }
+
+    private fun intentMaps() {
+        intent = Intent(this, MapsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun intentCapture() {

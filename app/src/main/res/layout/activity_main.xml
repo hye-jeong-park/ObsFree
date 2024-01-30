@@ -176,7 +176,7 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical">
             <ImageButton
-                android:id="@+id/map_button"
+                android:id="@+id/btn_main_intentmap"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
