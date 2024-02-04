@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.lifecycleScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.obsfreegdsc.obsfree.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val USER_PREFERENCES_NAME = "user_preferences"
@@ -30,10 +33,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeAlert(isChecked: Boolean) {
-        lifecycleScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             dataStore.edit { preferences ->
                 preferences[PreferencesKeys.ALERT_SET] = isChecked
             }
+        }
+
+        if (isChecked) {
+            val workRequest =
+                OneTimeWorkRequestBuilder<AlertWorker>()
+                    .addTag("alert")
+                    .build()
+
+            WorkManager
+                .getInstance(applicationContext)
+                .enqueue(workRequest)
+        } else {
+            WorkManager
+                .getInstance(applicationContext)
+                .cancelAllWorkByTag("alert")
         }
     }
 
