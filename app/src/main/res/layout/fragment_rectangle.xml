@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rectangle_2"
+    android:layout_width="match_parent"
+    android:layout_height="117sp"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/rectangle_top"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <LinearLayout
+        android:layout_width="80sp"
+        android:layout_height="80sp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="40sp"
+        android:layout_marginTop="20sp"
+        android:orientation="vertical"
+        >
+
+        <ImageButton
+            android:id="@+id/information_button"
+            android:background="@drawable/icon_imformation"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/main_btn_info"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="80sp"
+        android:layout_height="80sp"
+        android:layout_marginRight="40sp"
+        android:layout_marginTop="20sp"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        >
+
+        <ImageButton
+            android:id="@+id/map_button"
+            android:background="@drawable/icon_map4"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/main_btn_status"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

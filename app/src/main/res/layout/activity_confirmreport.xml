@@ -5,51 +5,51 @@
     android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="80sp"
         android:background="@color/white">
         <ImageButton
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/arrow"/>
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:background="@drawable/icon_arrow"/>
         <Space
-            android:layout_width="20dp"
+            android:layout_width="20sp"
             android:layout_height="wrap_content"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="신고 내용 확인"
             android:textStyle="bold"
-            android:textSize="20dp"/>
+            android:textSize="20sp"/>
     </androidx.appcompat.widget.Toolbar>
     
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="60dp"/>
+        android:layout_height="60sp"/>
     <ImageView
         android:id="@+id/img_confirmreport_photo"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:src="@drawable/map4"
+        android:layout_width="250sp"
+        android:layout_height="250sp"
+        android:src="@drawable/icon_map4"
         android:layout_gravity="center"/>
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="40dp"/>
+        android:layout_height="40sp"/>
     <androidx.appcompat.widget.Toolbar
-        android:layout_width="300dp"
-        android:layout_height="80dp"
+        android:layout_width="300sp"
+        android:layout_height="80sp"
         android:layout_gravity="center"
         android:background="@color/white"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/spot"/>
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:background="@drawable/icon_spot"/>
         <TextView
             android:id="@+id/tv_confirmreport_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="위치정보"
-            android:textSize="20dp"/>
+            android:textSize="20sp"/>
     </androidx.appcompat.widget.Toolbar>
     <Space
         android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
         android:layout_weight="1"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="150sp">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_comfirmreport_cancel"
             android:layout_width="match_parent"

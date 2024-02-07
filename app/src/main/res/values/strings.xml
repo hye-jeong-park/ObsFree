@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">GDSC_S_C</string>
-    <string name="some_id">파손 신고 및 촬영</string>
+    <string name="main_switch_text">음성 알림</string>
+    <string name="main_btn_112_call">112긴급\n전화신고</string>
+    <string name="main_btn_cam">파손 신고 및 촬영</string>
+    <string name="main_btn_info">사용법</string>
+    <string name="main_btn_status">신고 현황</string>
+    <string name="capture_btn">캡쳐</string>
 </resources>

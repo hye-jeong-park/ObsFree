@@ -7,16 +7,18 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/prvv_capture_rearcam"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        />
 
     <Button
         android:id="@+id/btn_capture_capture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="50dp"
-        android:text="캡쳐"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:layout_marginBottom="50sp"
+        android:text="@string/capture_btn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
