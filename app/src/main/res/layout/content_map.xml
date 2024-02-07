@@ -52,9 +52,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Find Restaurants"
+        android:text="Find marker"
         android:textColor="#FFFFFF"
-        android:background="@color/black"
+        android:background="@color/dark_yellow"
         android:layout_margin="16dp"
         android:textStyle="bold"/>
 

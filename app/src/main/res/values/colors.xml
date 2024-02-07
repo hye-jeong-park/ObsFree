@@ -5,6 +5,7 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="navy">#233E59</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dark_yellow">#FBB106</color>
@@ -15,4 +16,5 @@
     <color name="rectangle_edge">#FBB106</color>
     <color name="rectangle_left">#E9EBEA</color>
     <color name="rectangle_right">#FBB106</color>
+    233E59
 </resources>
