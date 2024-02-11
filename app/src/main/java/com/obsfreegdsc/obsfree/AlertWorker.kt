@@ -10,6 +10,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -30,6 +31,18 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters):
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return Result.failure()
+        }
+
+        val prevLatitude = inputData.getDouble("PREV_LAT", Double.MIN_VALUE)
+        val prevLongitude = inputData.getDouble("PREV_LON", Double.MIN_VALUE)
+
+        val prevLocation = if (prevLatitude == Double.MIN_VALUE || prevLongitude == Double.MIN_VALUE) {
+            null
+        } else {
+            Location("dummy").apply {
+                latitude = prevLatitude
+                longitude = prevLongitude
+            }
         }
 
         locationClient.getCurrentLocation(
@@ -58,20 +71,32 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters):
                             "distance: ${location.distanceTo(blockLocation)}"
                         )
                     }
+
+                    enqueueNextWork(location.latitude, location.longitude)
                 }
+        }.addOnFailureListener {
+            enqueueNextWork(Double.MIN_VALUE, Double.MIN_VALUE)
         }
+
+        // Indicate whether the work finished successfully with the Result
+        return Result.success()
+    }
+
+    private fun enqueueNextWork(latitude: Double, longitude: Double) {
+        val data = workDataOf(
+            "PREV_LAT" to latitude,
+            "PREV_LON" to longitude
+        )
 
         val workRequest =
             OneTimeWorkRequestBuilder<AlertWorker>()
                 .addTag("alert")
+                .setInputData(data)
                 .setInitialDelay(10, TimeUnit.SECONDS)
                 .build()
 
         WorkManager
             .getInstance(applicationContext)
             .enqueue(workRequest)
-
-        // Indicate whether the work finished successfully with the Result
-        return Result.success()
     }
 }
