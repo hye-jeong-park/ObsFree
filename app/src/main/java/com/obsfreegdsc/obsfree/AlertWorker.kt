@@ -3,6 +3,7 @@ package com.obsfreegdsc.obsfree
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.work.OneTimeWorkRequestBuilder
@@ -12,11 +13,15 @@ import androidx.work.WorkerParameters
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObject
+import com.google.firebase.ktx.Firebase
 import java.util.concurrent.TimeUnit
 
 class AlertWorker(appContext: Context, workerParams: WorkerParameters):
     Worker(appContext, workerParams) {
     private val locationClient = LocationServices.getFusedLocationProviderClient(appContext)
+    private val db = Firebase.firestore
 
     override fun doWork(): Result {
         if (ActivityCompat.checkSelfPermission(
@@ -33,10 +38,27 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters):
         ).addOnSuccessListener { location ->
             location?.let {
                 Log.d(
-                    "TAG",
+                    "AlertWork",
                     "Current Location = [lat : ${location.latitude}, lng : ${location.longitude}]",
                 )
             }
+
+            db.collection("broken_blocks")
+                .get()
+                .addOnSuccessListener { result ->
+                    val blockLocation = Location("dummy")
+                    for (document in result) {
+                        document.toObject<BrokenBlock>().let { brokenBlock ->
+                                blockLocation.latitude = brokenBlock.latitude
+                                blockLocation.longitude = brokenBlock.longitude
+                        }
+
+                        Log.d(
+                            "AlertWork",
+                            "distance: ${location.distanceTo(blockLocation)}"
+                        )
+                    }
+                }
         }
 
         val workRequest =
