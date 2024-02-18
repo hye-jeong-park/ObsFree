@@ -21,7 +21,6 @@ import androidx.core.graphics.rotationMatrix
 import com.obsfreegdsc.obsfree.databinding.ActivityCaptureBinding
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -71,6 +70,29 @@ class CaptureActivity : AppCompatActivity() {
             imageCapture = ImageCapture.Builder()
                 .build()
 
+            val imageAnalyzer = ImageAnalysis.Builder()
+                .build()
+                .also {
+                    it.setAnalyzer(cameraExecutor, WhiteCaneAnalyzer(
+                            Yolov5TFLiteDetector(this,"last-fp16.tflite")
+                        ) { recognitions ->
+                            for (recognition: Recognition in recognitions) {
+                                if (recognition.confidence > 0.5) {
+                                    val location = recognition.location
+                                    Log.d(
+                                        "YOLO",
+                                        "(${location.left}, ${location.top}, ${location.right}, ${location.bottom})"
+                                    )
+                                }
+                            }
+
+                            if (recognitions.isEmpty()) {
+                                Log.d("YOLO", "White cane not found.")
+                            }
+                        }
+                    )
+                }
+
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -80,7 +102,7 @@ class CaptureActivity : AppCompatActivity() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
+                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
@@ -170,7 +192,7 @@ class CaptureActivity : AppCompatActivity() {
         override fun analyze(image: ImageProxy) {
             val bitmap = Bitmap.createBitmap(image.toBitmap(), 0, 0,
                 image.width, image.height, rotationMatrix(image.imageInfo.rotationDegrees.toFloat()), true)
-            val canePosition = detector.detect(bitmap);
+            val canePosition = detector.detect(bitmap)
 
             listener(canePosition)
 
