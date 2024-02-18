@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
@@ -20,10 +21,13 @@ import androidx.core.graphics.rotationMatrix
 import com.obsfreegdsc.obsfree.databinding.ActivityCaptureBinding
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
+typealias CanePositionListener = (canePosition: ArrayList<Recognition>) -> Unit
 
 class CaptureActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCaptureBinding
@@ -160,6 +164,18 @@ class CaptureActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+
+    private class WhiteCaneAnalyzer(private val detector: Yolov5TFLiteDetector, private val listener: CanePositionListener) : ImageAnalysis.Analyzer {
+        override fun analyze(image: ImageProxy) {
+            val bitmap = Bitmap.createBitmap(image.toBitmap(), 0, 0,
+                image.width, image.height, rotationMatrix(image.imageInfo.rotationDegrees.toFloat()), true)
+            val canePosition = detector.detect(bitmap);
+
+            listener(canePosition)
+
+            image.close()
+        }
     }
 
     companion object {
