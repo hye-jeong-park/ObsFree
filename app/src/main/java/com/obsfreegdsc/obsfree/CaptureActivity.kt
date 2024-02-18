@@ -74,7 +74,10 @@ class CaptureActivity : AppCompatActivity() {
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor, WhiteCaneAnalyzer(
-                            Yolov5TFLiteDetector(this,"last-fp16.tflite")
+                            Yolov5TFLiteDetector(
+                                this,
+                                "last-fp16.tflite"
+                            ), 5000
                         ) { recognitions ->
                             for (recognition: Recognition in recognitions) {
                                 if (recognition.confidence > 0.5) {
@@ -188,13 +191,23 @@ class CaptureActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
-    private class WhiteCaneAnalyzer(private val detector: Yolov5TFLiteDetector, private val listener: CanePositionListener) : ImageAnalysis.Analyzer {
-        override fun analyze(image: ImageProxy) {
-            val bitmap = Bitmap.createBitmap(image.toBitmap(), 0, 0,
-                image.width, image.height, rotationMatrix(image.imageInfo.rotationDegrees.toFloat()), true)
-            val canePosition = detector.detect(bitmap)
+    private class WhiteCaneAnalyzer(private val detector: Yolov5TFLiteDetector,
+                                    private val interval: Int,
+                                    private val listener: CanePositionListener) : ImageAnalysis.Analyzer {
+        private var lastTime = System.currentTimeMillis()
 
-            listener(canePosition)
+        override fun analyze(image: ImageProxy) {
+            val currentTime = System.currentTimeMillis()
+
+            if (currentTime - lastTime > interval) {
+                val bitmap = Bitmap.createBitmap(image.toBitmap(), 0, 0,
+                    image.width, image.height, rotationMatrix(image.imageInfo.rotationDegrees.toFloat()), true)
+                val canePosition = detector.detect(bitmap)
+
+                listener(canePosition)
+
+                lastTime = currentTime
+            }
 
             image.close()
         }
