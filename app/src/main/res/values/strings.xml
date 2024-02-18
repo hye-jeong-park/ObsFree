@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">ObsFree</string>
     <string name="main_switch_text">음성 알림</string>
     <string name="main_btn_112_call">112긴급\n전화신고</string>
     <string name="main_btn_cam">파손 신고 및 촬영</string>
