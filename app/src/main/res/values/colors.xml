@@ -10,7 +10,8 @@
     <color name="dark_yellow">#FBB106</color>
     <color name="yellow">#59FBB106</color>
     <color name="grey">#AAAAAA</color>
-    <color name="rectangle_top">#D9D9D9</color>
+    <color name="rectangle_top">#23FBB106</color>
+    <color name="rectangle_bottom">#233E59</color>
     <color name="rectangle_center">#FBB106</color>
     <color name="rectangle_edge">#FBB106</color>
     <color name="rectangle_left">#E9EBEA</color>

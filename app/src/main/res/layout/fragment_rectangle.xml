@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="117sp"
     android:layout_alignParentBottom="true"
-    android:background="@drawable/rectangle_top"
+    android:background="@drawable/rectangle_bottom"
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
