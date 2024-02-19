@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
@@ -25,17 +26,22 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+typealias CanePositionListener = (canePosition: ArrayList<Recognition>) -> Unit
+
 class CaptureActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCaptureBinding
 
     private var imageCapture: ImageCapture? = null
-
     private lateinit var cameraExecutor: ExecutorService
+
+    private lateinit var textToSpeechManager: TextToSpeechManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityCaptureBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        textToSpeechManager = TextToSpeechManager.getInstance(applicationContext)
 
         if (cameraPermissionGranted()) {
             startCamera()
@@ -67,6 +73,53 @@ class CaptureActivity : AppCompatActivity() {
             imageCapture = ImageCapture.Builder()
                 .build()
 
+            val imageAnalyzer = ImageAnalysis.Builder()
+                .build()
+                .also {
+                    it.setAnalyzer(cameraExecutor, WhiteCaneAnalyzer(
+                            Yolov5TFLiteDetector(
+                                this,
+                                "last-fp16.tflite"
+                            ), 5000
+                        ) { recognitions ->
+                            if (recognitions.isNotEmpty() &&
+                                recognitions[0].confidence > 0.5) {
+                                val location = recognitions[0].location
+
+                                val bound = 100
+                                var speakText = ""
+
+                                if (location.centerX() < 320 - bound) {
+                                    speakText += "왼쪽"
+                                } else if (location.centerX() > 320 + bound) {
+                                    speakText += "오른쪽"
+                                }
+
+                                if (location.top < 320 - bound) {
+                                    speakText += "위"
+                                } else if (location.top > 320 + bound) {
+                                    speakText += "아래"
+                                }
+
+                                if (speakText.isNotEmpty()) {
+                                    speakText += "를 비춰주세요."
+                                } else {
+                                    speakText = "카메라 위치가 정상적입니다."
+                                }
+
+                                textToSpeechManager.speak(speakText)
+
+                                Log.d(
+                                    "YOLO",
+                                    "(${location.left}, ${location.top}, ${location.right}, ${location.bottom})"
+                                )
+                            } else {
+                                textToSpeechManager.speak("흰 지팡이가 인식되지 않았습니다.")
+                            }
+                        }
+                    )
+                }
+
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -76,7 +129,7 @@ class CaptureActivity : AppCompatActivity() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
+                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
@@ -160,6 +213,28 @@ class CaptureActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+
+    private class WhiteCaneAnalyzer(private val detector: Yolov5TFLiteDetector,
+                                    private val interval: Int,
+                                    private val listener: CanePositionListener) : ImageAnalysis.Analyzer {
+        private var lastTime = System.currentTimeMillis()
+
+        override fun analyze(image: ImageProxy) {
+            val currentTime = System.currentTimeMillis()
+
+            if (currentTime - lastTime > interval) {
+                val bitmap = Bitmap.createBitmap(image.toBitmap(), 0, 0,
+                    image.width, image.height, rotationMatrix(image.imageInfo.rotationDegrees.toFloat()), true)
+                val canePosition = detector.detect(bitmap)
+
+                listener(canePosition)
+
+                lastTime = currentTime
+            }
+
+            image.close()
+        }
     }
 
     companion object {
