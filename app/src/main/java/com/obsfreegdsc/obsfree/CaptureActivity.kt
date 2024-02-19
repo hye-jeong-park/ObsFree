@@ -32,13 +32,16 @@ class CaptureActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCaptureBinding
 
     private var imageCapture: ImageCapture? = null
-
     private lateinit var cameraExecutor: ExecutorService
+
+    private lateinit var textToSpeechManager: TextToSpeechManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityCaptureBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        textToSpeechManager = TextToSpeechManager.getInstance(applicationContext)
 
         if (cameraPermissionGranted()) {
             startCamera()
@@ -79,18 +82,39 @@ class CaptureActivity : AppCompatActivity() {
                                 "last-fp16.tflite"
                             ), 5000
                         ) { recognitions ->
-                            for (recognition: Recognition in recognitions) {
-                                if (recognition.confidence > 0.5) {
-                                    val location = recognition.location
-                                    Log.d(
-                                        "YOLO",
-                                        "(${location.left}, ${location.top}, ${location.right}, ${location.bottom})"
-                                    )
-                                }
-                            }
+                            if (recognitions.isNotEmpty() &&
+                                recognitions[0].confidence > 0.5) {
+                                val location = recognitions[0].location
 
-                            if (recognitions.isEmpty()) {
-                                Log.d("YOLO", "White cane not found.")
+                                val bound = 100
+                                var speakText = ""
+
+                                if (location.centerX() < 320 - bound) {
+                                    speakText += "왼쪽"
+                                } else if (location.centerX() > 320 + bound) {
+                                    speakText += "오른쪽"
+                                }
+
+                                if (location.top < 320 - bound) {
+                                    speakText += "위"
+                                } else if (location.top > 320 + bound) {
+                                    speakText += "아래"
+                                }
+
+                                if (speakText.isNotEmpty()) {
+                                    speakText += "를 비춰주세요."
+                                } else {
+                                    speakText = "카메라 위치가 정상적입니다."
+                                }
+
+                                textToSpeechManager.speak(speakText)
+
+                                Log.d(
+                                    "YOLO",
+                                    "(${location.left}, ${location.top}, ${location.right}, ${location.bottom})"
+                                )
+                            } else {
+                                textToSpeechManager.speak("흰 지팡이가 인식되지 않았습니다.")
                             }
                         }
                     )
