@@ -33,7 +33,7 @@
 
         <!--track이랑 thumb는 따로 만든 스위치-->
         <Switch
-            android:id="@+id/voice_switch"
+            android:id="@+id/sw_main_alert"
             android:layout_marginTop="2sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

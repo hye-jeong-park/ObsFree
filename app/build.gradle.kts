@@ -72,4 +72,6 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-gpu-api:2.10.0")
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
     implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
+
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }
