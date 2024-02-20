@@ -23,6 +23,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters):
     Worker(appContext, workerParams) {
     private val locationClient = LocationServices.getFusedLocationProviderClient(appContext)
     private val db = Firebase.firestore
+    private val textToSpeechManager = TextToSpeechManager.getInstance(applicationContext)
 
     override fun doWork(): Result {
         if (ActivityCompat.checkSelfPermission(
@@ -66,12 +67,12 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters):
                                 blockLocation.longitude = brokenBlock.longitude
                         }
 
-                        Log.d(
-                            "AlertWork",
-                            "distance: ${location.distanceTo(blockLocation)}"
-                        )
+                        if (location.distanceTo(blockLocation) <= 100 &&
+                            (prevLocation == null || prevLocation.distanceTo(blockLocation) > 100)) {
+                            textToSpeechManager.speak("근처에 망가진 점자 블록이 있습니다.")
+                            break
+                        }
                     }
-
                     enqueueNextWork(location.latitude, location.longitude)
                 }
         }.addOnFailureListener {
