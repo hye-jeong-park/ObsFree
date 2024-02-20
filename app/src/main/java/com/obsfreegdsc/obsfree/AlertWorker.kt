@@ -75,6 +75,9 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters):
                     }
                     enqueueNextWork(location.latitude, location.longitude)
                 }
+                .addOnFailureListener {
+                    enqueueNextWork(location.latitude, location.longitude)
+                }
         }.addOnFailureListener {
             enqueueNextWork(Double.MIN_VALUE, Double.MIN_VALUE)
         }
