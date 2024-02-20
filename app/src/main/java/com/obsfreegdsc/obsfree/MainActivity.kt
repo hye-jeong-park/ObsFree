@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-                    FOREGROUND_REQUEST_CODE_PERMISSIONS
+                    BACKGROUND_REQUEST_CODE_PERMISSIONS
                 )
             } else {
                 scheduleAlertWorker()
