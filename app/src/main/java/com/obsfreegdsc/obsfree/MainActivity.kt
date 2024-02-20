@@ -1,7 +1,6 @@
 package com.obsfreegdsc.obsfree
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -11,21 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.obsfreegdsc.obsfree.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-private const val USER_PREFERENCES_NAME = "user_preferences"
-
-private val Context.dataStore by preferencesDataStore(
-    name = USER_PREFERENCES_NAME
-)
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -40,12 +27,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeAlert(isChecked: Boolean) {
-        CoroutineScope(Dispatchers.IO).launch {
-            dataStore.edit { preferences ->
-                preferences[PreferencesKeys.ALERT_SET] = isChecked
-            }
-        }
-
         if (isChecked) {
             if (!foregroundLocationPermissionsGranted()) {
                 ActivityCompat.requestPermissions(
@@ -139,8 +120,4 @@ class MainActivity : AppCompatActivity() {
             ).toTypedArray()
         private const val BACKGROUND_REQUEST_CODE_PERMISSIONS = 40
     }
-}
-
-private object PreferencesKeys {
-    val ALERT_SET = booleanPreferencesKey("alert_set")
 }
