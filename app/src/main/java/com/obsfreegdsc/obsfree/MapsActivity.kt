@@ -8,6 +8,7 @@ import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -44,7 +45,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        findViewById<ImageButton>(R.id.myLocationButton).setOnClickListener {
+            moveToCurrentLocation()
+        }
     }
+
 
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -69,20 +75,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun moveToCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 권한 체크
             return
         }
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            // 현재 위치로 지도 이동
             location?.let {
-                val userLocation = LatLng(it.latitude, it.longitude)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f))
+                val currentLatLng = LatLng(it.latitude, it.longitude)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
             }
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = false
+
             moveToCurrentLocation()
         } else {
             checkLocationPermission()
