@@ -66,6 +66,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8"))
     implementation("com.google.android.libraries.places:places:3.3.0")
     implementation("com.skyfishjy.ripplebackground:library:1.0.1")
+    implementation("com.squareup.picasso:picasso:2.71828")
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-analytics")
