@@ -33,6 +33,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.io.IOException
 import java.util.Locale
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -212,17 +213,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //경도+위도 위치 정보를 도로명 주소 혹은 지번 주소로 변경
         val geocoder = Geocoder(this, Locale.getDefault())
-        val addresses: List<Address> =
-            geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)!!
-
-        val addressText = if (addresses.isNotEmpty()) {
-            addresses[0].getAddressLine(0)
-        } else {
-            "${brokenBlock.latitude}, ${brokenBlock.longitude}"
+        try {
+            // 주소 가져오기
+            val addresses = geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)
+            val addressText = addresses?.firstOrNull()?.getAddressLine(0) ?: "주소를 찾을 수 없음"
+            textViewLocation.text = "위치: $addressText"
+        } catch (e: IOException) {
+            textViewLocation.text = "위치: ${brokenBlock.latitude}, ${brokenBlock.longitude}"
         }
 
-        textViewLocation.text = "위치: $addressText"
-
+        //Firebase Storage에서 이미지 URL 가져오기
         brokenBlock.filename?.let { filename ->
             val imagePath = "images/$filename"
             val imageRef = storage.reference.child(imagePath)
