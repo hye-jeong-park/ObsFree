@@ -15,10 +15,9 @@
 
     <ImageView
         android:id="@+id/imageViewPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:contentDescription="@string/image_desc"
-        android:scaleType="centerCrop"/>
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"/>
 
     <ToggleButton
         android:id="@+id/toggleButtonStatus"
