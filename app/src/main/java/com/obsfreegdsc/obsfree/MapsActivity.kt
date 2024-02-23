@@ -26,6 +26,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -45,12 +49,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+        Places.initialize(applicationContext, getString(R.string.google_map_api_key))
+
+        // SupportMapFragment를 획득하고 지도를 사용할 준비가 되면 알림 받기
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        //AutocompleteSupportFragment 초기화
+        val autocompleteFragment = supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
+                as AutocompleteSupportFragment
+
+        autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
+
+        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place) {
+                // 선택된 장소 위치정보 가져오기
+                place.latLng?.let {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 12.0f))
+                }
+            }
+
+            override fun onError(status: com.google.android.gms.common.api.Status) {
+            }
+        })
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         checkLocationPermission()
-
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
         findViewById<ImageButton>(R.id.myLocationButton).setOnClickListener {
             moveToCurrentLocation()
