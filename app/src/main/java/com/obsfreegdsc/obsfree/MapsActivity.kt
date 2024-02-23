@@ -13,7 +13,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -209,7 +208,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val textViewLocation = dialogView.findViewById<TextView>(R.id.dialog_location)
         val imageView = dialogView.findViewById<ImageView>(R.id.dialog_image)
-        val toggleButtonConfirmation = dialogView.findViewById<ToggleButton>(R.id.dialog_toggle_confirmation)
+        val toggleButtonConfirmation = dialogView.findViewById<com.github.angads25.toggle.widget.LabeledSwitch>(R.id.dialog_toggle_confirmation)
 
         //경도+위도 위치 정보를 도로명 주소 혹은 지번 주소로 변경
         val geocoder = Geocoder(this, Locale.getDefault())
@@ -234,23 +233,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // 토글 버튼 상태 설정
-        toggleButtonConfirmation.isChecked = brokenBlock.confirmation == "Resolved"
-        toggleButtonConfirmation.setOnCheckedChangeListener { _, isChecked ->
-            val newStatus = if (isChecked) "Resolved" else "Unresolved"
+        toggleButtonConfirmation.isOn = brokenBlock.confirmation == "Resolved"
+        toggleButtonConfirmation.setOnToggledListener { _, isOn ->
+            val newState = if (isOn) "Resolved" else "Unresolved"
+            // 파이어베이스 문서 업데이트
             db.collection("broken_blocks").document(documentId)
-                .update("confirmation", newStatus)
+                .update("confirmation", newState)
                 .addOnSuccessListener {
-                    Log.d("Update", "Document update successful!")
+                    Log.d("Update", "DocumentSnapshot successfully updated!")
                 }
                 .addOnFailureListener { e ->
-                    Log.w("Update", "Document update failed.", e)
+                    Log.w("Update", "Error updating document", e)
                 }
         }
 
         builder.setView(dialogView)
-        builder.setPositiveButton("OK") { dialog, _ ->
-            dialog.dismiss()
-        }
+        builder.setPositiveButton("OK", null)
         builder.show()
     }
 }
