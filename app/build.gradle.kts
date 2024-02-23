@@ -70,4 +70,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage")
+
+    implementation("com.github.angads25:toggle:1.1.0")
 }
