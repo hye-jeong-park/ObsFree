@@ -25,7 +25,7 @@
         android:id="@+id/dialog_toggle_confirmation"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textOff="미해결"
-        android:textOn="해결"
+        android:textOff="Unresolved"
+        android:textOn="Resolved"
         android:checked="false"/>
 </LinearLayout>

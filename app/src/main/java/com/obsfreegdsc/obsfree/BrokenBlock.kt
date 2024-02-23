@@ -4,5 +4,5 @@ data class BrokenBlock(
     val latitude: Double = 0.toDouble(),
     val longitude: Double = 0.toDouble(),
     val filename: String? = null,
-    val confirmation: String? = "미해결"
+    val confirmation: String? = "Unresolved"
 )

@@ -78,7 +78,7 @@ class ConfirmReportActivity : AppCompatActivity() {
         }
 
         val uuid = UUID.randomUUID().toString()
-        val confirmation = "미해결"
+        val confirmation = "Unresolved"
 
         val db = Firebase.firestore
         val brokenBlock = BrokenBlock(

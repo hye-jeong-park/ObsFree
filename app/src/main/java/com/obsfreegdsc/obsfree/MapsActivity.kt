@@ -233,7 +233,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        toggleButtonConfirmation.isChecked = brokenBlock.confirmation == "해결"
+        toggleButtonConfirmation.isChecked = brokenBlock.confirmation == "Resolved"
         toggleButtonConfirmation.setOnCheckedChangeListener { _, isChecked ->
         }
 
