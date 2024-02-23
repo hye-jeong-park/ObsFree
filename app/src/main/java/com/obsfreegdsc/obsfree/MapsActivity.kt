@@ -169,6 +169,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val imageViewPhoto = infoWindow.findViewById<ImageView>(R.id.imageViewPhoto)
             val toggleButtonStatus = infoWindow.findViewById<ToggleButton>(R.id.toggleButtonStatus)
 
+            // 토글 버튼의 상태 설정
+            toggleButtonStatus.isChecked = brokenBlock.confirmation == "해결"
+
             return infoWindow
         }
 
