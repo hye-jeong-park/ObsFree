@@ -3,6 +3,8 @@ package com.obsfreegdsc.obsfree
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,6 +33,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.util.Locale
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -207,7 +210,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val imageView = dialogView.findViewById<ImageView>(R.id.dialog_image)
         val toggleButtonConfirmation = dialogView.findViewById<ToggleButton>(R.id.dialog_toggle_confirmation)
 
-        textViewLocation.text = "위치: ${brokenBlock.latitude}, ${brokenBlock.longitude}"
+        //경도+위도 위치 정보를 도로명 주소 혹은 지번 주소로 변경
+        val geocoder = Geocoder(this, Locale.getDefault())
+        val addresses: List<Address> =
+            geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)!!
+
+        val addressText = if (addresses.isNotEmpty()) {
+            addresses[0].getAddressLine(0)
+        } else {
+            "${brokenBlock.latitude}, ${brokenBlock.longitude}"
+        }
+
+        textViewLocation.text = "위치: $addressText"
 
         brokenBlock.filename?.let { filename ->
             val imagePath = "images/$filename"
