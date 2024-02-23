@@ -169,6 +169,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val imageViewPhoto = infoWindow.findViewById<ImageView>(R.id.imageViewPhoto)
             val toggleButtonStatus = infoWindow.findViewById<ToggleButton>(R.id.toggleButtonStatus)
 
+            // Firebase Storage에서 이미지 URL 얻기
+            brokenBlock.filename?.let { filename ->
+                val imagePath = "images/${filename}"
+                val imageRef = storage.reference.child(imagePath)
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    Log.d("ImageURL", "Image URL: $uri")
+                    //이미지 로딩
+                    Picasso.get().load(uri.toString()).resize(200, 200).into(imageViewPhoto)
+
+                }.addOnFailureListener {
+                    // URL을 얻는 데 실패한 경우 처리
+                    Log.d("ImageError", "이미지를 가져오는 데 실패")
+                }
+            }
+
             // 토글 버튼의 상태 설정
             toggleButtonStatus.isChecked = brokenBlock.confirmation == "해결"
 
