@@ -198,4 +198,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+
+    private fun showAlertDialogForMarker(brokenBlock: BrokenBlock) {
+        val builder = AlertDialog.Builder(this)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_marker_details, null)
+
+        val textViewLocation = dialogView.findViewById<TextView>(R.id.dialog_location)
+        val imageView = dialogView.findViewById<ImageView>(R.id.dialog_image)
+        val toggleButtonConfirmation = dialogView.findViewById<ToggleButton>(R.id.dialog_toggle_confirmation)
+
+        textViewLocation.text = "위치: ${brokenBlock.latitude}, ${brokenBlock.longitude}"
+
+        brokenBlock.filename?.let { filename ->
+            val imagePath = "images/$filename"
+            val imageRef = storage.reference.child(imagePath)
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                Picasso.get().load(uri.toString()).into(imageView)
+            }.addOnFailureListener {
+                imageView.setImageResource(R.drawable.ic_launcher_background)
+            }
+        }
+
+        toggleButtonConfirmation.isChecked = brokenBlock.confirmation == "해결"
+        toggleButtonConfirmation.setOnCheckedChangeListener { _, isChecked ->
+        }
+
+        builder.setView(dialogView)
+        builder.setPositiveButton("OK", null)
+        builder.show()
+    }
 }
