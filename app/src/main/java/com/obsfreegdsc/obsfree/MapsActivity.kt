@@ -169,6 +169,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val imageViewPhoto = infoWindow.findViewById<ImageView>(R.id.imageViewPhoto)
             val toggleButtonStatus = infoWindow.findViewById<ToggleButton>(R.id.toggleButtonStatus)
 
+            // Geocoder를 사용하여 위도와 경도로부터 주소 획득
+            try {
+                val geocoder = Geocoder(context, Locale.getDefault())
+                val addresses =
+                    geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)
+
+                // 주소 리스트가 비어있지 않은 경우 첫 번째 주소 사용
+                if (addresses != null && addresses.isNotEmpty()) {
+                    textViewAddress.text = addresses[0].getAddressLine(0)
+                } else {
+                    textViewAddress.text = "주소를 찾을 수 없음"
+                }
+            } catch (e: IOException) {
+                textViewAddress.text = "주소를 찾을 수 없음"
+            }
+
             // Firebase Storage에서 이미지 URL 얻기
             brokenBlock.filename?.let { filename ->
                 val imagePath = "images/${filename}"
