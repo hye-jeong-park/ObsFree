@@ -59,8 +59,6 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
 
-    /*implementation("com.google.android.gms:play-services-location:21.1.0")
-    implementation("com.google.android.libraries.places:places:3.3.0")*/
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.github.mancj:MaterialSearchBar:0.8.2")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8"))

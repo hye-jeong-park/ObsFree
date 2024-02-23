@@ -1,12 +1,10 @@
 package com.obsfreegdsc.obsfree
 
 import android.Manifest
-import android.content.Context
+import android.app.AlertDialog
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
@@ -33,9 +31,6 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.io.IOException
-import java.util.Locale
-
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -56,10 +51,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         //AutocompleteSupportFragment 초기화
-        val autocompleteFragment = supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
-                as AutocompleteSupportFragment
+        val autocompleteFragment =
+            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
+                    as AutocompleteSupportFragment
 
-        autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
+        autocompleteFragment.setPlaceFields(
+            listOf(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG
+            )
+        )
 
         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
@@ -162,7 +164,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             checkLocationPermission()
         }
 
-        mMap.setInfoWindowAdapter(CustomInfoWindowAdapter(this))
         loadMultipleMarkers()
     }
 
@@ -171,72 +172,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             for (document in documents) {
                 val latitude = document.getDouble("latitude") ?: 0.0
                 val longitude = document.getDouble("longitude") ?: 0.0
-                val markerOptions =
-                    MarkerOptions().position(LatLng(latitude, longitude)).title(document.id)
+                val markerOptions = MarkerOptions().position(LatLng(latitude, longitude)).title(document.id)
                 val marker = mMap.addMarker(markerOptions)
-                marker?.tag = BrokenBlock(
-                    latitude = latitude,
-                    longitude = longitude,
-                    filename = document.getString("filename"),
-                    confirmation = document.getString("confirmation")
-                )
+                marker!!.tag = document.id
+            }
+            mMap.setOnMarkerClickListener { marker ->
+                showMarkerDetails(marker)
+                true
             }
         }.addOnFailureListener { exception ->
             Toast.makeText(this, "Error getting documents: $exception", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    inner class CustomInfoWindowAdapter(private val context: Context) :
-        GoogleMap.InfoWindowAdapter {
-        override fun getInfoWindow(marker: Marker): View? {
-            val infoWindow = LayoutInflater.from(context).inflate(R.layout.custom_info_window, null)
-
-            val brokenBlock = marker.tag as? BrokenBlock ?: return null
-
-            val textViewAddress = infoWindow.findViewById<TextView>(R.id.textViewAddress)
-            val imageViewPhoto = infoWindow.findViewById<ImageView>(R.id.imageViewPhoto)
-            val toggleButtonStatus = infoWindow.findViewById<ToggleButton>(R.id.toggleButtonStatus)
-
-            // Geocoder를 사용하여 위도와 경도로부터 주소 획득
-            try {
-                val geocoder = Geocoder(context, Locale.getDefault())
-                val addresses =
-                    geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)
-
-                // 주소 리스트가 비어있지 않은 경우 첫 번째 주소 사용
-                if (addresses != null && addresses.isNotEmpty()) {
-                    textViewAddress.text = addresses[0].getAddressLine(0)
-                } else {
-                    textViewAddress.text = "주소를 찾을 수 없음"
-                }
-            } catch (e: IOException) {
-                textViewAddress.text = "주소를 찾을 수 없음"
-            }
-
-            // Firebase Storage에서 이미지 URL 얻기
-            brokenBlock.filename?.let { filename ->
-                val imagePath = "images/${filename}"
-                val imageRef = storage.reference.child(imagePath)
-                imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    Log.d("ImageURL", "Image URL: $uri")
-                    //이미지 로딩
-                    Picasso.get().load(uri.toString()).resize(200, 200).into(imageViewPhoto)
-
-                }.addOnFailureListener {
-                    // URL을 얻는 데 실패한 경우 처리
-                    Log.d("ImageError", "이미지를 가져오는 데 실패")
-                }
-            }
-
-            // 토글 버튼의 상태 설정
-            toggleButtonStatus.isChecked = brokenBlock.confirmation == "해결"
-
-            return infoWindow
-        }
-
-        override fun getInfoContents(marker: Marker): View? {
-            // 기본 정보 창 컨텐츠를 사용하지 않는 경우
-            return null
         }
     }
 }
