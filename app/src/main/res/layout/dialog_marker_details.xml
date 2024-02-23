@@ -10,22 +10,19 @@
         android:id="@+id/dialog_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Location"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginBottom="8dp"/>
+        android:text="위치"/>
 
     <ImageView
         android:id="@+id/dialog_image"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginTop="8dp"/>
 
     <ToggleButton
         android:id="@+id/dialog_toggle_confirmation"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:textOff="Unresolved"
-        android:textOn="Resolved"
-        android:checked="false"/>
+        android:textOn="Resolved"/>
 </LinearLayout>

@@ -3,10 +3,10 @@ package com.obsfreegdsc.obsfree
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
-import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
@@ -190,12 +190,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun showMarkerDetails(marker: Marker) {
-        val documentId = marker.tag as String
+        val documentId = marker.tag as? String ?: return
         db.collection("broken_blocks").document(documentId).get().addOnSuccessListener { document ->
             if (document.exists()) {
                 val brokenBlock = document.toObject(BrokenBlock::class.java)
                 brokenBlock?.let {
-                    showAlertDialogForMarker(brokenBlock)
+                    showAlertDialogForMarker(brokenBlock, documentId)
                 }
             } else {
                 Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
@@ -203,7 +203,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun showAlertDialogForMarker(brokenBlock: BrokenBlock) {
+    private fun showAlertDialogForMarker(brokenBlock: BrokenBlock, documentId: String) {
         val builder = AlertDialog.Builder(this)
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_marker_details, null)
 
@@ -216,7 +216,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         try {
             // 주소 가져오기
             val addresses = geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)
-            val addressText = addresses?.firstOrNull()?.getAddressLine(0) ?: "주소를 찾을 수 없음"
+            val addressText = addresses?.firstOrNull()?.getAddressLine(0) ?: "Can not find the address."
             textViewLocation.text = "위치: $addressText"
         } catch (e: IOException) {
             textViewLocation.text = "위치: ${brokenBlock.latitude}, ${brokenBlock.longitude}"
@@ -233,12 +233,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        // 토글 버튼 상태 설정
         toggleButtonConfirmation.isChecked = brokenBlock.confirmation == "Resolved"
         toggleButtonConfirmation.setOnCheckedChangeListener { _, isChecked ->
+            val newStatus = if (isChecked) "Resolved" else "Unresolved"
+            db.collection("broken_blocks").document(documentId)
+                .update("confirmation", newStatus)
+                .addOnSuccessListener {
+                    Log.d("Update", "Document update successful!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("Update", "Document update failed.", e)
+                }
         }
 
         builder.setView(dialogView)
-        builder.setPositiveButton("OK", null)
+        builder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
         builder.show()
     }
 }
