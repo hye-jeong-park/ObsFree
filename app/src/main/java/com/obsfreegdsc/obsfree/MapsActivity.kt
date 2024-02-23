@@ -184,4 +184,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(this, "Error getting documents: $exception", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun showMarkerDetails(marker: Marker) {
+        val documentId = marker.tag as String
+        db.collection("broken_blocks").document(documentId).get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val brokenBlock = document.toObject(BrokenBlock::class.java)
+                brokenBlock?.let {
+                    showAlertDialogForMarker(brokenBlock)
+                }
+            } else {
+                Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }
