@@ -82,7 +82,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -142,6 +141,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        //검색창 배경색 변경(투명 -> 흰색)
+        val autocompleteFragmentView = findViewById<View>(R.id.autocomplete_fragment)
+        autocompleteFragmentView?.setBackgroundColor(getResources().getColor(R.color.white))
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
