@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -18,11 +19,16 @@
         android:layout_height="200dp"
         android:layout_marginTop="8dp"/>
 
-    <ToggleButton
+    <com.github.angads25.toggle.widget.LabeledSwitch
         android:id="@+id/dialog_toggle_confirmation"
-        android:layout_width="wrap_content"
+        android:layout_width="82dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textOff="Unresolved"
-        android:textOn="Resolved"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:textSize="12sp"
+        app:on="true"
+        app:textOn="Resolved"
+        app:textOff="Unresolved"
+        app:colorOn="@color/dark_yellow"
+        app:colorBorder="@color/grey"/>
 </LinearLayout>
