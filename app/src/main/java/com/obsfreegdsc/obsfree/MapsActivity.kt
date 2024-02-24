@@ -216,9 +216,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // 주소 가져오기
             val addresses = geocoder.getFromLocation(brokenBlock.latitude, brokenBlock.longitude, 1)
             val addressText = addresses?.firstOrNull()?.getAddressLine(0) ?: "Can not find the address."
-            textViewLocation.text = "위치: $addressText"
+            textViewLocation.text = "$addressText"
         } catch (e: IOException) {
-            textViewLocation.text = "위치: ${brokenBlock.latitude}, ${brokenBlock.longitude}"
+            textViewLocation.text = "${brokenBlock.latitude}, ${brokenBlock.longitude}"
         }
 
         //Firebase Storage에서 이미지 URL 가져오기
