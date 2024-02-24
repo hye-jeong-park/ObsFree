@@ -1,28 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="182dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="16dp">
+    android:layout_margin="0dp"
+    android:padding="0dp"
+    android:gravity="center_horizontal">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/semibold"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:text="신고 정보 (Report information)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    </FrameLayout>
 
     <TextView
-        android:id="@+id/dialog_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="위치"/>
+        android:layout_gravity="center"
+        android:fontFamily="@font/bold"
+        android:textSize="11dp"
+        android:textColor="@color/dark_yellow"
+        android:text="Photo"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <ImageView
         android:id="@+id/dialog_image"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/bold"
+        android:textSize="11dp"
+        android:textColor="@color/dark_yellow"
+        android:text="Location"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/dialog_location"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/regular"
+        android:textSize="10dp"
+        android:textColor="@color/black"
+        android:text="null"
+        android:layout_gravity="center"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/bold"
+        android:textSize="11dp"
+        android:textColor="@color/dark_yellow"
+        android:text="Did you solve it?"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <com.github.angads25.toggle.widget.LabeledSwitch
         android:id="@+id/dialog_toggle_confirmation"
-        android:layout_width="82dp"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_gravity="center"
+        android:layout_height="25dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:textSize="12sp"
