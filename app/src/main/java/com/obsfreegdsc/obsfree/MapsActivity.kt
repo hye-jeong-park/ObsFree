@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -38,6 +39,7 @@ import java.util.Locale
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    private val markerMap = HashMap<String, Marker>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val db = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
@@ -175,16 +177,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             for (document in documents) {
                 val latitude = document.getDouble("latitude") ?: 0.0
                 val longitude = document.getDouble("longitude") ?: 0.0
-                val markerOptions = MarkerOptions().position(LatLng(latitude, longitude)).title(document.id)
+                val confirmation = document.getString("confirmation") ?: "Unresolved"
+                val icon = if (confirmation == "Resolved")
+                    BitmapDescriptorFactory.fromResource(R.drawable.marker_resolved)
+                else
+                    BitmapDescriptorFactory.fromResource(R.drawable.marker_unresolved)
+
+                val markerOptions = MarkerOptions()
+                    .position(LatLng(latitude, longitude))
+                    .title(document.id)
+                    .icon(icon)
                 val marker = mMap.addMarker(markerOptions)
-                marker!!.tag = document.id
-            }
-            mMap.setOnMarkerClickListener { marker ->
-                showMarkerDetails(marker)
-                true
+                marker?.let {
+                    it.tag = document.id
+                    markerMap[document.id] = it
+                }
             }
         }.addOnFailureListener { exception ->
             Toast.makeText(this, "Error getting documents: $exception", Toast.LENGTH_SHORT).show()
+        }
+
+        mMap.setOnMarkerClickListener { marker ->
+            marker.tag?.let {
+                showMarkerDetails(marker)
+            }
+            true
         }
     }
 
@@ -194,7 +211,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (document.exists()) {
                 val brokenBlock = document.toObject(BrokenBlock::class.java)
                 brokenBlock?.let {
-                    showAlertDialogForMarker(brokenBlock, documentId)
+                    showAlertDialogForMarker(brokenBlock, documentId, marker)
                 }
             } else {
                 Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
@@ -202,7 +219,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun showAlertDialogForMarker(brokenBlock: BrokenBlock, documentId: String) {
+    private fun showAlertDialogForMarker(brokenBlock: BrokenBlock, documentId: String, marker: Marker) {
         val builder = AlertDialog.Builder(this)
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_marker_details, null)
 
@@ -236,7 +253,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         toggleButtonConfirmation.isOn = brokenBlock.confirmation == "Resolved"
         toggleButtonConfirmation.setOnToggledListener { _, isOn ->
             val newState = if (isOn) "Resolved" else "Unresolved"
-            // 파이어베이스 문서 업데이트
+            val newIcon = if (newState == "Resolved")
+                BitmapDescriptorFactory.fromResource(R.drawable.marker_resolved)
+            else
+                BitmapDescriptorFactory.fromResource(R.drawable.marker_unresolved)
+
+            marker.setIcon(newIcon)
+
             db.collection("broken_blocks").document(documentId)
                 .update("confirmation", newState)
                 .addOnSuccessListener {
@@ -246,7 +269,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.w("Update", "Error updating document", e)
                 }
         }
-
         builder.setView(dialogView)
         builder.setPositiveButton("OK", null)
         builder.show()
