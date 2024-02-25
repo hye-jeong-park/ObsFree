@@ -100,7 +100,7 @@ ObsFree provides a service that assists blind individuals in reporting issues wi
 
 ---
 
-| Name | HyeJoengPark | DoHyunLim | YoungHyunPark | KiJinKim |
+| Name | HyeJeong Park | DoHyun Lim | YoungHyeon Park | KiJin Kim |
 | --- | --- | --- | --- | --- |
 | Role | Backend & Design | AI | Backend | Frontend |
 | Profile Image | <img width="461" alt="박혜정" src="https://github.com/aDecay/ObsFree/assets/136609617/53096900-73ae-44fe-b28a-69d6da603b5a"> | ![임도현](https://github.com/aDecay/ObsFree/assets/136609617/8f6905d9-c66f-4770-a612-adc30d8590c8) | ![박영현](https://github.com/aDecay/ObsFree/assets/136609617/d5d5d584-1095-40b4-b506-acb92e4b50de) | ![김기진](https://github.com/aDecay/ObsFree/assets/136609617/19db49a1-3bc5-46c7-87e8-1c6efd77b946)
