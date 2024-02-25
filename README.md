@@ -80,13 +80,13 @@ ObsFree provides a service that assists blind individuals in reporting issues wi
 
 ---
 
-<img src="https://github.com/aDecay/ObsFree/assets/136609617/ca32544f-45b0-4d79-acac-79d43b1e68f9" width="800" height="450"/>   
+<img src="https://github.com/aDecay/ObsFree/assets/63340879/6f99d59b-2e2e-4d3a-a674-e9af8a0c8f13" width="800" height="450"/>   
 
 
-<img src="https://github.com/aDecay/ObsFree/assets/136609617/424a3a20-e816-4c9c-9ea9-8712988a0342" width="800" height="450"/>   
+<img src="https://github.com/aDecay/ObsFree/assets/63340879/8aac95ae-169a-4d91-8d18-4f217ddc8f79" width="800" height="450"/>   
 
 
-<img src="https://github.com/aDecay/ObsFree/assets/136609617/dbd1583a-7123-49b4-aa1b-3919636b5035" width="700" height="350"/>   
+<img src="https://github.com/aDecay/ObsFree/assets/63340879/6196c8de-afbf-4694-aa10-1869ca522adc" width="800" height="450"/>   
 
 
 
