@@ -33,24 +33,3 @@ class RectangleFragment : Fragment() {
         _viewBinding = null
     }
 }
-
-
-//class RectangleFragment : Fragment() {
-//    private lateinit var viewBinding: FragmentRectangleBinding
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//
-//    ): View? {
-//        // Inflate the layout for this fragment
-//        viewBinding.mapButtonWhole.setOnClickListener { intentMap() }
-//        return inflater.inflate(R.layout.fragment_rectangle, container, false)
-//
-//    }
-//
-//    private fun intentMap(){
-//        val intent = Intent(activity, MapsActivity::class.java)
-//        startActivity(intent)
-//    }
-//}
