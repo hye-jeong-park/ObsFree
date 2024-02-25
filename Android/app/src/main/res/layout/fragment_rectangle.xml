@@ -38,6 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/map_button_whole"
         android:layout_width="80sp"
         android:layout_height="80sp"
         android:layout_marginRight="40sp"

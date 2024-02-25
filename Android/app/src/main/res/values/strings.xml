@@ -6,4 +6,5 @@
     <string name="main_btn_info">사용법</string>
     <string name="main_btn_status">신고 현황</string>
     <string name="capture_btn">캡쳐</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
