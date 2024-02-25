@@ -78,12 +78,14 @@ class ConfirmReportActivity : AppCompatActivity() {
         }
 
         val uuid = UUID.randomUUID().toString()
+        val confirmation = "Unresolved"
 
         val db = Firebase.firestore
         val brokenBlock = BrokenBlock(
             location!!.latitude,
             location!!.longitude,
-            "$uuid.jpg"
+            "$uuid.jpg",
+            confirmation
         )
 
         db.collection("broken_blocks").add(brokenBlock)
