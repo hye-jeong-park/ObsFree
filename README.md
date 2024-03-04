@@ -2,7 +2,7 @@
 
 ---
 
-<img width="365" alt="obsfree_logo" src="https://github.com/aDecay/ObsFree/assets/136609617/3c8f2241-e80d-487c-801d-fcd6c54a56aa">
+<img width="730" alt="obsfree_structure" src="https://github.com/aDecay/ObsFree/assets/63340879/740990be-51e8-4744-ab19-063f1d2b85a0">
 
 ObsFree provides a service that assists blind individuals in reporting issues with Braille blocks. By simplifying the reporting procedure, it helps the handling agency to operate more smoothly. In addition, it provides a service that shows the status of complaint acceptance and sends notifications if there may be damaged Braille blocks nearby when approaching the area. Even if a complaint is filed, it takes some time to repair it due to physical limitations. Therefore, it can reduce accidents caused by damaged or vandalized Braille blocks by notifying them for a certain period of time.
 
