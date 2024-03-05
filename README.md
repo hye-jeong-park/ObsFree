@@ -12,7 +12,7 @@ ObsFree provides a service that assists blind individuals in reporting issues wi
 
 ---
 
-<img width="792" alt="un_targets" src="https://github.com/aDecay/ObsFree/assets/136609617/b999cad6-e984-4638-9d68-182ddb6fe653">
+<img width="600" alt="un_targets" src="https://github.com/aDecay/ObsFree/assets/136609617/b999cad6-e984-4638-9d68-182ddb6fe653">
 
 ---
 
